@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"dubbo-go-pixiu-benchmark/dubbogo/main/pkg"
+	"dubbo-go-pixiu-benchmark/dubbogo/pkg"
 	"dubbo.apache.org/dubbo-go/v3/config"
 	"fmt"
 	hessian "github.com/apache/dubbo-go-hessian2"
