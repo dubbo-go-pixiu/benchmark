@@ -83,7 +83,7 @@ func main() {
 		},
 	}
 
-	url, err := common.NewURL("127.0.0.1:20000/com.ikurento.user.UserProvider",
+	url, err := common.NewURL("127.0.0.1:20000/org.apache.dubbo.sample.UserProvider",
 		common.WithProtocol(dubbo.DUBBO), common.WithParamsValue(dubboConstant.SerializationKey, dubboConstant.Hessian2Serialization),
 		common.WithParamsValue(dubboConstant.GenericFilterKey, "true"),
 		common.WithParamsValue(dubboConstant.InterfaceKey,  ""),
