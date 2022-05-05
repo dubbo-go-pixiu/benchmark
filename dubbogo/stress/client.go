@@ -34,7 +34,7 @@ func main() {
 	user, err := userProvider.GetUser(context.TODO(), &pkg.User{ID: "1113333", Name: "chengxingyuan", Code: 111, Age: 111})
 
 	if err != nil {
-		fmt.Println("打印当前客户端调用结果: %s", user)
+		fmt.Println("Print the result of the current client call: %s", user)
 	}
 
 }
