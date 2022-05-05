@@ -1,12 +1,21 @@
 package main
 
 import (
-	"dubbo-go-pixiu-benchmark/dubbogo/pkg"
-	"dubbo-go-pixiu-benchmark/stats"
-	"dubbo.apache.org/dubbo-go/v3/common/logger"
 	"flag"
+	"fmt"
 	"sync"
 	"time"
+)
+
+import (
+	"dubbo-go-pixiu-benchmark/dubbogo/pkg"
+
+	"dubbo-go-pixiu-benchmark/stats"
+
+	"dubbo.apache.org/dubbo-go/v3/common"
+	dubboConstant "dubbo.apache.org/dubbo-go/v3/common/constant"
+	"dubbo.apache.org/dubbo-go/v3/common/logger"
+	"dubbo.apache.org/dubbo-go/v3/protocol/dubbo"
 )
 
 var (
@@ -74,13 +83,51 @@ func main() {
 		},
 	}
 
-	//FIXME 压测器解析dubbo协议请求连接 执行请求
+	url, err := common.NewURL("127.0.0.1:20000/com.ikurento.user.UserProvider",
+		common.WithProtocol(dubbo.DUBBO), common.WithParamsValue(dubboConstant.SerializationKey, dubboConstant.Hessian2Serialization),
+		common.WithParamsValue(dubboConstant.GenericFilterKey, "true"),
+		common.WithParamsValue(dubboConstant.InterfaceKey,  ""),
+		common.WithParamsValue(dubboConstant.ReferenceFilterKey, "generic,filter"),
+		// dubboAttachment must contains group and version info
+		common.WithParamsValue(dubboConstant.GroupKey,  ""),
+		common.WithParamsValue(dubboConstant.VersionKey, ""),
+		common.WithPath(dubboConstant.InterfaceKey))
+
+	if err != nil {
+		fmt.Println("current url: ",url)
+	}
+	//dubboProtocol := dubbo.NewDubboProtocol()
+	//
+	//invoker := dubboProtocol.Refer(url)
+	//ctx := &dubbo2.RpcContext{}
+	//invoc := ctx.RpcInvocation
+	//
+	//if err != nil {
+	//	if invoker == nil {
+	//		ctx.SetError(errors.Errorf("can't connect to upstream server %s with address %s", endpoint.Name, endpoint.Address.GetAddress()))
+	//	}
+	//	var resp interface{}
+	//	invoc.SetReply(&resp)
+	//
+	//	invCtx := context.Background()
+	//	result := invoker.Invoke(invCtx, invoc)
+	//}
+
+
+
+
+
+
 	r := req
 	if r == nil {
 
 	}
 
-	//warmDeadline := time.Now().Add(time.Duration(*warmupDur) * time.Second)
-	//endDeadline := warmDeadline.Add(time.Duration(*duration) * time.Second)
+	warmDeadline := time.Now().Add(time.Duration(*warmupDur) * time.Second)
+	endDeadline := warmDeadline.Add(time.Duration(*duration) * time.Second)
+
+	if endDeadline != time.Now() {
+
+	}
 
 }

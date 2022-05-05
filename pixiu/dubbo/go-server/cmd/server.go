@@ -1,7 +1,6 @@
 package server
 
 import (
-	"dubbo-go-pixiu-benchmark/pixiu/dubbo/go-server/pkg"
 	"fmt"
 	"os"
 	"os/signal"
@@ -10,6 +9,8 @@ import (
 )
 
 import (
+	"dubbo-go-pixiu-benchmark/pixiu/dubbo/go-server/pkg"
+
 	"dubbo.apache.org/dubbo-go/v3/common/logger"
 	"dubbo.apache.org/dubbo-go/v3/config"
 	_ "dubbo.apache.org/dubbo-go/v3/imports"

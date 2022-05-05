@@ -2,6 +2,7 @@ package main
 
 import (
 	"dubbo-go-pixiu-benchmark/api"
+
 	"dubbo.apache.org/dubbo-go/v3/common/constant"
 	"dubbo.apache.org/dubbo-go/v3/common/logger"
 	"dubbo.apache.org/dubbo-go/v3/config"

@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"dubbo-go-pixiu-benchmark/api"
-	"dubbo.apache.org/dubbo-go/v3/common/constant"
 	"sync"
 )
 
 import (
+	"dubbo-go-pixiu-benchmark/api"
+
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
 	"dubbo.apache.org/dubbo-go/v3/common/logger"
 	"dubbo.apache.org/dubbo-go/v3/config"
 	_ "dubbo.apache.org/dubbo-go/v3/imports"

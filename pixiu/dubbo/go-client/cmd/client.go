@@ -2,11 +2,12 @@ package client
 
 import (
 	"context"
-	"dubbo-go-pixiu-benchmark/pixiu/dubbo/go-client/pkg"
 	"time"
 )
 
 import (
+	"dubbo-go-pixiu-benchmark/pixiu/dubbo/go-client/pkg"
+
 	"dubbo.apache.org/dubbo-go/v3/common/logger"
 	"dubbo.apache.org/dubbo-go/v3/config"
 	_ "dubbo.apache.org/dubbo-go/v3/imports"

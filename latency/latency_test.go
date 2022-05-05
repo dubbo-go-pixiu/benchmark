@@ -2,13 +2,16 @@ package latency
 
 import (
 	"bytes"
-	"dubbo-go-pixiu-benchmark/test"
 	"fmt"
 	"net"
 	"reflect"
 	"sync"
 	"testing"
 	"time"
+)
+
+import (
+	"dubbo-go-pixiu-benchmark/test"
 )
 
 type s struct {

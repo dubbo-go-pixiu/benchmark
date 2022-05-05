@@ -1,6 +1,7 @@
 module dubbo-go-pixiu-benchmark
 
 require (
+	//github.com/apache/dubbo-go-pixiu v0.5.0-rc1
 	dubbo.apache.org/dubbo-go/v3 v3.0.1
 	github.com/apache/dubbo-go-hessian2 v1.11.0
 	github.com/dubbogo/gost v1.11.22
@@ -29,6 +30,7 @@ require (
 	github.com/creasty/defaults v1.5.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dubbogo/go-zookeeper v1.0.4-0.20211212162352-f9d2183d89d5 // indirect
+	github.com/dubbogo/tools v1.0.9 // indirect
 	github.com/emicklei/go-restful/v3 v3.7.3 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect

@@ -1,11 +1,14 @@
 package flags
 
 import (
-	"dubbo-go-pixiu-benchmark/test"
 	"flag"
 	"reflect"
 	"testing"
 	"time"
+)
+
+import (
+	"dubbo-go-pixiu-benchmark/test"
 )
 
 type s struct {

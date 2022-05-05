@@ -2,9 +2,14 @@ package main
 
 import (
 	"context"
-	"dubbo-go-pixiu-benchmark/dubbogo/pkg"
-	"dubbo.apache.org/dubbo-go/v3/config"
 	"fmt"
+)
+
+import (
+	"dubbo-go-pixiu-benchmark/dubbogo/pkg"
+
+	"dubbo.apache.org/dubbo-go/v3/config"
+
 	hessian "github.com/apache/dubbo-go-hessian2"
 )
 
