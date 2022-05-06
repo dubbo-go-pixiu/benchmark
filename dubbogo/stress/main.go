@@ -1,8 +1,11 @@
 package main
 
 import (
+	"context"
+	"dubbo-go-pixiu-benchmark/api"
 	"flag"
 	"fmt"
+	"reflect"
 	"sync"
 	"time"
 )
@@ -16,6 +19,7 @@ import (
 	dubboConstant "dubbo.apache.org/dubbo-go/v3/common/constant"
 	"dubbo.apache.org/dubbo-go/v3/common/logger"
 	"dubbo.apache.org/dubbo-go/v3/protocol/dubbo"
+	invocationImpl "dubbo.apache.org/dubbo-go/v3/protocol/invocation"
 )
 
 var (
@@ -56,8 +60,6 @@ func runWithConn(req *pkg.StressRequest, warmDeadline, endDeadline time.Time) {
 					return
 				}
 
-				//TODO 编写dubbo proxy服务调用
-
 				elapsed := time.Since(start)
 				if start.After(warmDeadline) {
 					hist.Add(elapsed.Nanoseconds())
@@ -68,11 +70,6 @@ func runWithConn(req *pkg.StressRequest, warmDeadline, endDeadline time.Time) {
 }
 
 func main() {
-
-	flag.Parse()
-	if *testName == "" {
-		logger.Fatalf("test_name not set")
-	}
 
 	req := &pkg.StressRequest{
 		ResponseType: 0,
@@ -86,37 +83,49 @@ func main() {
 	url, err := common.NewURL("127.0.0.1:20000/org.apache.dubbo.sample.UserProvider",
 		common.WithProtocol(dubbo.DUBBO), common.WithParamsValue(dubboConstant.SerializationKey, dubboConstant.Hessian2Serialization),
 		common.WithParamsValue(dubboConstant.GenericFilterKey, "true"),
-		common.WithParamsValue(dubboConstant.InterfaceKey,  ""),
+		common.WithParamsValue(dubboConstant.InterfaceKey, ""),
 		common.WithParamsValue(dubboConstant.ReferenceFilterKey, "generic,filter"),
 		// dubboAttachment must contains group and version info
-		common.WithParamsValue(dubboConstant.GroupKey,  ""),
+		common.WithParamsValue(dubboConstant.GroupKey, ""),
 		common.WithParamsValue(dubboConstant.VersionKey, ""),
 		common.WithPath(dubboConstant.InterfaceKey))
 
 	if err != nil {
-		fmt.Println("current url: ",url)
+		fmt.Println("current url: ", url)
 	}
-	//dubboProtocol := dubbo.NewDubboProtocol()
-	//
-	//invoker := dubboProtocol.Refer(url)
-	//ctx := &dubbo2.RpcContext{}
-	//invoc := ctx.RpcInvocation
-	//
-	//if err != nil {
-	//	if invoker == nil {
-	//		ctx.SetError(errors.Errorf("can't connect to upstream server %s with address %s", endpoint.Name, endpoint.Address.GetAddress()))
-	//	}
-	//	var resp interface{}
-	//	invoc.SetReply(&resp)
-	//
-	//	invCtx := context.Background()
-	//	result := invoker.Invoke(invCtx, invoc)
-	//}
+	dubboProtocol := dubbo.NewDubboProtocol()
 
+	args := []reflect.Value{}
+	args = append(args, reflect.ValueOf(&api.HelloRequest{Name: "request name"}))
+	bizReply := &api.HelloReply{}
+	params := []interface{}{"1", "username"}
 
+	invoker := dubboProtocol.Refer(url)
+	invoc := invocationImpl.NewRPCInvocationWithOptions(invocationImpl.WithMethodName("GetUser"),
+		invocationImpl.WithArguments(params),
+		invocationImpl.WithReply(bizReply),
+		invocationImpl.WithCallBack(nil), invocationImpl.WithParameterValues(args))
 
-
-
+	invCtx := context.Background()
+	if err != nil {
+		if invoker == nil {
+			logger.Errorf("can't connect to upstream server %s with address %s")
+		}
+		res := invoker.Invoke(invCtx, invoc)
+		if res.Error() != nil {
+			urlStrs := res.Result().([]string)
+			ret := make([]*common.URL, 0, len(urlStrs))
+			for _, v := range urlStrs {
+				tempURL, err := common.NewURL(v)
+				if err != nil {
+					url := common.URL{}
+					logger.Infof("current instance url :", url)
+				}
+				ret = append(ret, tempURL)
+			}
+			logger.Infof("final result: ", ret)
+		}
+	}
 
 	r := req
 	if r == nil {
