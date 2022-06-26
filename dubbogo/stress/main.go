@@ -3,8 +3,11 @@ package main
 import (
 	"context"
 	"dubbo-go-pixiu-benchmark/api"
+	"dubbo-go-pixiu-benchmark/helpers"
 	"flag"
 	"fmt"
+	"os"
+	"os/exec"
 	"reflect"
 	"sync"
 	"time"
@@ -42,6 +45,10 @@ var (
 	}
 	mu    sync.Mutex
 	hists []*stats.Histogram
+	failInterceptor   *helpers.FailInterceptor
+	banyandSession    *gexec.Session
+	rootPath          string
+	deferRootPathFunc func()
 )
 
 func runWithConn(req *pkg.StressRequest, warmDeadline, endDeadline time.Time) {
@@ -79,6 +86,12 @@ func main() {
 			Body: make([]byte, *rqSize),
 		},
 	}
+	banyandbBinary, err := gexec.Build("github.com/dubbo-go-pixiu/benchmark/dubbogo/server/cmd/server.go");
+	Expect(err).ShouldNot(HaveOccurred())
+	cmd := exec.Command(banyandBinary)
+	banyandSession, err = gexec.Start(cmd, os.Stdout, os.Stdout)
+	Expect(err).ShouldNot(HaveOccurred())
+
 
 	url, err := common.NewURL("127.0.0.1:20000/org.apache.dubbo.sample.UserProvider",
 		common.WithProtocol(dubbo.DUBBO), common.WithParamsValue(dubboConstant.SerializationKey, dubboConstant.Hessian2Serialization),
@@ -138,5 +151,6 @@ func main() {
 	if endDeadline != time.Now() {
 
 	}
+	runWithConn(req,warmDeadline,endDeadline)
 
 }
