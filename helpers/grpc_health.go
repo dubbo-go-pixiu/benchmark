@@ -6,9 +6,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc/health/grpc_health_v1"
-
-	"github.com/benchmark/helpers"
-	"github.com/apache/benchmark/logger"
+	"dubbo-go-pixiu-benchmark/logger"
 )
 
 var (
@@ -18,13 +16,13 @@ var (
 
 func HealthCheck(addr string, connTimeout time.Duration, rpcTimeout time.Duration) func() error {
 	return func() error {
-		conn, err := grpchelper.Conn(addr, connTimeout)
+		conn, err := conn(addr, connTimeout)
 		if err != nil {
 			return err
 		}
 		defer conn.Close()
 		var resp *grpc_health_v1.HealthCheckResponse
-		if err := grpchelper.Request(context.Background(), rpcTimeout, func(rpcCtx context.Context) (err error) {
+		if err := Request(context.Background(), rpcTimeout, func(rpcCtx context.Context) (err error) {
 			resp, err = grpc_health_v1.NewHealthClient(conn).Check(rpcCtx,
 				&grpc_health_v1.HealthCheckRequest{
 					Service: ""})

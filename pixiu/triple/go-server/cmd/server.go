@@ -43,12 +43,11 @@ func main() {
 	config.SetProviderService(&GreeterProvider{})
 
 
-	path := "github.com/benchmark/dubbogo/server/conf/dubbogo.yml"
+	path := "github.com/dubbo-go-pixiu/benchmark/dubbogo/server/conf/dubbogo.yml"
 	if err := config.Load(config.WithPath(path)); err != nil {
 		logger.GetLogger().Error(err)
 	}
 
-	//golang多路复用 不断轮训客户端请求
 	select {}
 
 }

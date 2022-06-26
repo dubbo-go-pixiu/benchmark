@@ -18,6 +18,8 @@ import (
 
 	"dubbo-go-pixiu-benchmark/stats"
 
+	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 	"dubbo.apache.org/dubbo-go/v3/common"
 	dubboConstant "dubbo.apache.org/dubbo-go/v3/common/constant"
 	"dubbo.apache.org/dubbo-go/v3/common/logger"

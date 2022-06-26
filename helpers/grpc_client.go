@@ -10,12 +10,12 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"github.com/apache/skywalking-banyandb/pkg/logger"
+	"dubbo-go-pixiu-benchmark/logger"
 )
 
 var l = logger.GetLogger()
 
-func Conn(addr string, connTimeout time.Duration) (*grpc.ClientConn, error) {
+func conn(addr string, connTimeout time.Duration) (*grpc.ClientConn, error) {
 	opts := []grpc.DialOption{
 		grpc.WithBlock(),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
