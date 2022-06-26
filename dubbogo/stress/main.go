@@ -18,13 +18,13 @@ import (
 
 	"dubbo-go-pixiu-benchmark/stats"
 
-	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/gexec"
 	"dubbo.apache.org/dubbo-go/v3/common"
 	dubboConstant "dubbo.apache.org/dubbo-go/v3/common/constant"
 	"dubbo.apache.org/dubbo-go/v3/common/logger"
 	"dubbo.apache.org/dubbo-go/v3/protocol/dubbo"
 	invocationImpl "dubbo.apache.org/dubbo-go/v3/protocol/invocation"
+	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 )
 
 var (
@@ -45,8 +45,8 @@ var (
 		NumBuckets:   2495,
 		GrowthFactor: .01,
 	}
-	mu    sync.Mutex
-	hists []*stats.Histogram
+	mu                sync.Mutex
+	hists             []*stats.Histogram
 	failInterceptor   *helpers.FailInterceptor
 	banyandSession    *gexec.Session
 	rootPath          string
@@ -88,12 +88,11 @@ func main() {
 			Body: make([]byte, *rqSize),
 		},
 	}
-	banyandbBinary, err := gexec.Build("github.com/dubbo-go-pixiu/benchmark/dubbogo/server/cmd/server.go");
+	banyandbBinary, err := gexec.Build("github.com/dubbo-go-pixiu/benchmark/dubbogo/server/cmd/server.go")
 	Expect(err).ShouldNot(HaveOccurred())
-	cmd := exec.Command(banyandBinary)
+	cmd := exec.Command(banyandbBinary)
 	banyandSession, err = gexec.Start(cmd, os.Stdout, os.Stdout)
 	Expect(err).ShouldNot(HaveOccurred())
-
 
 	url, err := common.NewURL("127.0.0.1:20000/org.apache.dubbo.sample.UserProvider",
 		common.WithProtocol(dubbo.DUBBO), common.WithParamsValue(dubboConstant.SerializationKey, dubboConstant.Hessian2Serialization),
@@ -153,6 +152,6 @@ func main() {
 	if endDeadline != time.Now() {
 
 	}
-	runWithConn(req,warmDeadline,endDeadline)
+	runWithConn(req, warmDeadline, endDeadline)
 
 }

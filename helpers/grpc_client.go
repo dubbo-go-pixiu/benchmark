@@ -9,11 +9,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-
-	"dubbo-go-pixiu-benchmark/logger"
 )
-
-var l = logger.GetLogger()
 
 func conn(addr string, connTimeout time.Duration) (*grpc.ClientConn, error) {
 	opts := []grpc.DialOption{

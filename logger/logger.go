@@ -10,8 +10,6 @@ import (
 
 var ContextKey = contextKey{}
 var ErrNoLoggerInContext = errors.New("no logger in context")
-var root = rootLogger{}
-
 
 type contextKey struct{}
 

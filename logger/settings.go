@@ -37,7 +37,7 @@ func (rl *rootLogger) setDefault() {
 			Level: "debug",
 		})
 		if err != nil {
-			panic(err)
+			rl.l.Err(err)
 		}
 	}
 }
@@ -102,4 +102,3 @@ func getLogger(cfg Logging) (*Logger, error) {
 	l := zerolog.New(w).Level(lvl).With().Timestamp().Logger()
 	return &Logger{module: "root", Logger: &l}, nil
 }
-
