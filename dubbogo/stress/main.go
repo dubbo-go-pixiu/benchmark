@@ -48,7 +48,7 @@ var (
 	mu                sync.Mutex
 	hists             []*stats.Histogram
 	failInterceptor   *helpers.FailInterceptor
-	banyandSession    *gexec.Session
+	serverSession     *gexec.Session
 	rootPath          string
 	deferRootPathFunc func()
 )
@@ -88,10 +88,10 @@ func main() {
 			Body: make([]byte, *rqSize),
 		},
 	}
-	banyandbBinary, err := gexec.Build("github.com/dubbo-go-pixiu/benchmark/dubbogo/server/cmd/server.go")
+	serverCommand, err := gexec.Build("github.com/dubbo-go-pixiu/benchmark/dubbogo/server/cmd/server.go")
 	Expect(err).ShouldNot(HaveOccurred())
-	cmd := exec.Command(banyandbBinary)
-	banyandSession, err = gexec.Start(cmd, os.Stdout, os.Stdout)
+	cmd := exec.Command(serverCommand)
+	serverSession, err = gexec.Start(cmd, os.Stdout, os.Stdout)
 	Expect(err).ShouldNot(HaveOccurred())
 
 	url, err := common.NewURL("127.0.0.1:20000/org.apache.dubbo.sample.UserProvider",
