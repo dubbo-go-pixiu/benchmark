@@ -4,6 +4,7 @@ import (
 	"context"
 	"dubbo-go-pixiu-benchmark/api"
 	"dubbo-go-pixiu-benchmark/helpers"
+	"dubbo.apache.org/dubbo-go/v3/protocol"
 	"flag"
 	"fmt"
 	"os"
@@ -14,8 +15,6 @@ import (
 )
 
 import (
-	"dubbo-go-pixiu-benchmark/dubbogo/pkg"
-
 	"dubbo-go-pixiu-benchmark/stats"
 
 	"dubbo.apache.org/dubbo-go/v3/common"
@@ -30,16 +29,8 @@ import (
 var (
 	port      = flag.String("port", "50051", "Localhost port to connect to.")
 	numRPC    = flag.Int("r", 1, "The number of concurrent RPCs on each connection.")
-	numConn   = flag.Int("c", 1, "The number of parallel connections.")
 	warmupDur = flag.Int("w", 10, "Warm-up duration in seconds")
 	duration  = flag.Int("d", 60, "Benchmark duration in seconds")
-	rqSize    = flag.Int("req", 1, "Request message size in bytes.")
-	rspSize   = flag.Int("resp", 1, "Response message size in bytes.")
-	rpcType   = flag.String("rpc_type", "unary",
-		`Configure different stress rpc type. Valid options are:
-		   unary;
-		   streaming.`)
-	testName = flag.String("test_name", "", "Name of the test used for creating profiles.")
 	wg       sync.WaitGroup
 	hopts    = stats.HistogramOptions{
 		NumBuckets:   2495,
@@ -49,15 +40,30 @@ var (
 	hists             []*stats.Histogram
 	failInterceptor   *helpers.FailInterceptor
 	serverSession     *gexec.Session
-	rootPath          string
-	deferRootPathFunc func()
 )
 
-func runWithConn(req *pkg.StressRequest, warmDeadline, endDeadline time.Time) {
+func runWithConn(invoker protocol.Invoker,invCtx context.Context, invoc *invocationImpl.RPCInvocation, warmDeadline, endDeadline time.Time) {
 	for i := 0; i < *numRPC; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
+
+			res := invoker.Invoke(invCtx, invoc)
+
+			if res.Error() != nil {
+				urlStrs := res.Result().([]string)
+				ret := make([]*common.URL, 0, len(urlStrs))
+				for _, v := range urlStrs {
+					tempURL, err := common.NewURL(v)
+					if err != nil {
+						url := common.URL{}
+						logger.Infof("current instance url :", url)
+					}
+					ret = append(ret, tempURL)
+				}
+				logger.Infof("final result: ", ret)
+			}
+
 
 			hist := stats.NewHistogram(hopts)
 			for {
@@ -76,18 +82,11 @@ func runWithConn(req *pkg.StressRequest, warmDeadline, endDeadline time.Time) {
 			}
 		}()
 	}
+
 }
 
 func main() {
 
-	req := &pkg.StressRequest{
-		ResponseType: 0,
-		ResponseSize: int32(*rspSize),
-		Payload: &pkg.Payload{
-			Type: pkg.PayloadType_COMPRESSABLE,
-			Body: make([]byte, *rqSize),
-		},
-	}
 	serverCommand, err := gexec.Build("github.com/dubbo-go-pixiu/benchmark/dubbogo/server/cmd/server.go")
 	Expect(err).ShouldNot(HaveOccurred())
 	cmd := exec.Command(serverCommand)
@@ -125,33 +124,14 @@ func main() {
 		if invoker == nil {
 			logger.Errorf("can't connect to upstream server %s with address %s")
 		}
-		res := invoker.Invoke(invCtx, invoc)
-		if res.Error() != nil {
-			urlStrs := res.Result().([]string)
-			ret := make([]*common.URL, 0, len(urlStrs))
-			for _, v := range urlStrs {
-				tempURL, err := common.NewURL(v)
-				if err != nil {
-					url := common.URL{}
-					logger.Infof("current instance url :", url)
-				}
-				ret = append(ret, tempURL)
-			}
-			logger.Infof("final result: ", ret)
+
+		warmDeadline := time.Now().Add(time.Duration(*warmupDur) * time.Second)
+		endDeadline := warmDeadline.Add(time.Duration(*duration) * time.Second)
+
+		if endDeadline != time.Now() {
+
 		}
+		runWithConn(invoker,invCtx, invoc, warmDeadline, endDeadline)
 	}
-
-	r := req
-	if r == nil {
-
-	}
-
-	warmDeadline := time.Now().Add(time.Duration(*warmupDur) * time.Second)
-	endDeadline := warmDeadline.Add(time.Duration(*duration) * time.Second)
-
-	if endDeadline != time.Now() {
-
-	}
-	runWithConn(req, warmDeadline, endDeadline)
 
 }
