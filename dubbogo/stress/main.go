@@ -87,7 +87,7 @@ func runWithConn(invoker protocol.Invoker,invCtx context.Context, invoc *invocat
 
 func main() {
 
-	serverCommand, err := gexec.Build("github.com/dubbo-go-pixiu/benchmark/dubbogo/server/cmd/server.go")
+	serverCommand, err := gexec.Build("github.com/dubbo-go-pixiu/benchmark/dubbogo/server/cmd/server")
 	Expect(err).ShouldNot(HaveOccurred())
 	cmd := exec.Command(serverCommand)
 	serverSession, err = gexec.Start(cmd, os.Stdout, os.Stdout)
