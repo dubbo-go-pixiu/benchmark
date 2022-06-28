@@ -1,7 +1,6 @@
 module dubbo-go-pixiu-benchmark
 
 require (
-	//github.com/apache/dubbo-go-pixiu v0.5.0-rc1
 	dubbo.apache.org/dubbo-go/v3 v3.0.1
 	github.com/apache/dubbo-go-hessian2 v1.11.0
 	github.com/dubbogo/gost v1.12.4
@@ -12,16 +11,9 @@ require (
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/crypto v0.0.0-20211215165025-cf75a172585e // indirect
-	google.golang.org/protobuf v1.27.1
-)
-
-require (
 	github.com/golang/protobuf v1.5.2
 	go.uber.org/atomic v1.9.0
 	google.golang.org/grpc v1.44.0
-)
-
-require (
 	contrib.go.opencensus.io/exporter/prometheus v0.4.0 // indirect
 	github.com/RoaringBitmap/roaring v0.7.1 // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect

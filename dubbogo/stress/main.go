@@ -93,7 +93,9 @@ func main() {
 	serverSession, err = gexec.Start(cmd, os.Stdout, os.Stdout)
 	Expect(err).ShouldNot(HaveOccurred())
 
-	url, err := common.NewURL("127.0.0.1:20000/org.apache.dubbo.sample.UserProvider",
+	address := "127.0.0.1:20000"
+
+	url, err := common.NewURL(address + "/org.apache.dubbo.sample.UserProvider",
 		common.WithProtocol(dubbo.DUBBO), common.WithParamsValue(dubboConstant.SerializationKey, dubboConstant.Hessian2Serialization),
 		common.WithParamsValue(dubboConstant.GenericFilterKey, "true"),
 		common.WithParamsValue(dubboConstant.InterfaceKey, ""),
@@ -102,6 +104,9 @@ func main() {
 		common.WithParamsValue(dubboConstant.GroupKey, ""),
 		common.WithParamsValue(dubboConstant.VersionKey, ""),
 		common.WithPath(dubboConstant.InterfaceKey))
+
+	Eventually(helpers.HealthCheck(address, 30*time.Second, time.Second)).Should(Succeed())
+
 
 	if err != nil {
 		fmt.Println("current url: ", url)
