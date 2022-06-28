@@ -3,7 +3,9 @@ package logger
 import (
 	"context"
 	"strings"
+)
 
+import (
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
