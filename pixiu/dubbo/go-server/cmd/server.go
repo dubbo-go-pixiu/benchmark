@@ -35,10 +35,10 @@ func main() {
 	//config.SetProviderService(&pkg.ComplexProvider{})
 	//config.SetProviderService(&pkg.WrapperArrayClassProvider{})
 	// ------------
-	path := "/Users/windwheel/Documents/gitrepo/dubbo-go-triple-demo/pixiu/dubbo/go-server/conf/dubbogo.yml"
+	path := "github.com/dubbo-go-pixiu/benchmark/pixiu/dubbo/go-server/conf/dubbogo.yml"
 
 	if err := config.Load(config.WithPath(path)); err != nil {
-		panic(err)
+		logger.Error(err)
 	}
 
 	initSignal()

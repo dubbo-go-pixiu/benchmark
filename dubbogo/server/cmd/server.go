@@ -68,7 +68,7 @@ func (u *ContextContent) JavaClassName() string {
 
 func main() {
 	if err := config.Load(); err != nil {
-		panic(err)
+		logger.Error(err)
 	}
 
 	initSignal()

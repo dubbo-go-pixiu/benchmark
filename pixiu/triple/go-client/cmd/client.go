@@ -22,12 +22,12 @@ func init() {
 
 // export DUBBO_GO_CONFIG_PATH= PATH_TO_SAMPLES/helloworld/go-client/conf/dubbogo.yml
 func main() {
-	path := "/Users/windwheel/Documents/gitrepo/dubbo-go-triple-demo/context/triple/go-client/conf/dubbogo.yml"
+	path := "github.com/dubbo-go-pixiu/benchmark/pixiu/triple/go-server/conf/dubbogo.yml"
 
 	config.SetConsumerService(grpcGreeterImpl)
 	err := config.Load(config.WithPath(path))
 	if err != nil {
-		panic(err)
+		logger.Error(err)
 	}
 
 	logger.Info("start to test dubbo")
@@ -49,7 +49,7 @@ func main() {
 	if err != nil {
 		logger.Error(err)
 	}
-	// stream grpc双向流式发送
+	// stream grpc two-way streaming communication
 	err = stream.Send(request)
 	if err != nil {
 		logger.Error(err)
