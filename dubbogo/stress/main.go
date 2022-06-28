@@ -1,9 +1,13 @@
 package main
 
 import (
-	"context"
 	"dubbo-go-pixiu-benchmark/api"
 	"dubbo-go-pixiu-benchmark/helpers"
+	"dubbo-go-pixiu-benchmark/stats"
+)
+
+import (
+	"context"
 	"dubbo.apache.org/dubbo-go/v3/protocol"
 	"flag"
 	"fmt"
@@ -15,8 +19,6 @@ import (
 )
 
 import (
-	"dubbo-go-pixiu-benchmark/stats"
-
 	"dubbo.apache.org/dubbo-go/v3/common"
 	dubboConstant "dubbo.apache.org/dubbo-go/v3/common/constant"
 	"dubbo.apache.org/dubbo-go/v3/common/logger"
@@ -31,18 +33,18 @@ var (
 	numRPC    = flag.Int("r", 1, "The number of concurrent RPCs on each connection.")
 	warmupDur = flag.Int("w", 10, "Warm-up duration in seconds")
 	duration  = flag.Int("d", 60, "Benchmark duration in seconds")
-	wg       sync.WaitGroup
-	hopts    = stats.HistogramOptions{
+	wg        sync.WaitGroup
+	hopts     = stats.HistogramOptions{
 		NumBuckets:   2495,
 		GrowthFactor: .01,
 	}
-	mu                sync.Mutex
-	hists             []*stats.Histogram
-	failInterceptor   *helpers.FailInterceptor
-	serverSession     *gexec.Session
+	mu              sync.Mutex
+	hists           []*stats.Histogram
+	failInterceptor *helpers.FailInterceptor
+	serverSession   *gexec.Session
 )
 
-func runWithConn(invoker protocol.Invoker,invCtx context.Context, invoc *invocationImpl.RPCInvocation, warmDeadline, endDeadline time.Time) {
+func runWithConn(invoker protocol.Invoker, invCtx context.Context, invoc *invocationImpl.RPCInvocation, warmDeadline, endDeadline time.Time) {
 	for i := 0; i < *numRPC; i++ {
 		wg.Add(1)
 		go func() {
@@ -63,7 +65,6 @@ func runWithConn(invoker protocol.Invoker,invCtx context.Context, invoc *invocat
 				}
 				logger.Infof("final result: ", ret)
 			}
-
 
 			hist := stats.NewHistogram(hopts)
 			for {
@@ -95,7 +96,7 @@ func main() {
 
 	address := "127.0.0.1:20000"
 
-	url, err := common.NewURL(address + "/org.apache.dubbo.sample.UserProvider",
+	url, err := common.NewURL(address+"/org.apache.dubbo.sample.UserProvider",
 		common.WithProtocol(dubbo.DUBBO), common.WithParamsValue(dubboConstant.SerializationKey, dubboConstant.Hessian2Serialization),
 		common.WithParamsValue(dubboConstant.GenericFilterKey, "true"),
 		common.WithParamsValue(dubboConstant.InterfaceKey, ""),
@@ -106,7 +107,6 @@ func main() {
 		common.WithPath(dubboConstant.InterfaceKey))
 
 	Eventually(helpers.HealthCheck(address, 30*time.Second, time.Second)).Should(Succeed())
-
 
 	if err != nil {
 		fmt.Println("current url: ", url)
@@ -136,7 +136,7 @@ func main() {
 		if endDeadline != time.Now() {
 
 		}
-		runWithConn(invoker,invCtx, invoc, warmDeadline, endDeadline)
+		runWithConn(invoker, invCtx, invoc, warmDeadline, endDeadline)
 	}
 
 }

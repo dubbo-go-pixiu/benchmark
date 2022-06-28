@@ -2,6 +2,8 @@ package main
 
 import (
 	"dubbo-go-pixiu-benchmark/api"
+)
+import (
 	"dubbo.apache.org/dubbo-go/v3/common/constant"
 	"dubbo.apache.org/dubbo-go/v3/common/logger"
 	"dubbo.apache.org/dubbo-go/v3/config"
@@ -41,7 +43,6 @@ func (s *GreeterProvider) SayHelloStream(svr api.Greeter_SayHelloStreamServer) e
 
 func main() {
 	config.SetProviderService(&GreeterProvider{})
-
 
 	path := "github.com/dubbo-go-pixiu/benchmark/dubbogo/server/conf/dubbogo.yml"
 	if err := config.Load(config.WithPath(path)); err != nil {
