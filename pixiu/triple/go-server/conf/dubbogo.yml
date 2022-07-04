@@ -1,0 +1,13 @@
+dubbo:
+  registries:
+    demoZK:
+      protocol: zookeeper
+      address: yuluo-13:2181
+  protocols:
+    triple:
+      name: tri
+      port: 20000
+  provider:
+    services:
+      GreeterProvider:
+        interface: "org.apache.dubbogo.samples.api.Greeter" # read interface from pb

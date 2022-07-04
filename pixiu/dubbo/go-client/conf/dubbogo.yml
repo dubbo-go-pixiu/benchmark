@@ -1,0 +1,19 @@
+# dubbo client yaml configure file
+
+dubbo:
+  application: # 应用信息，服务启动后会将相关信息注册到注册中心，可被客户端从 url 中识别
+    name: GreetProvider # application=myApp; name=myApp
+    group: dubbo-test # organization=dubbo
+    version: myversion # app.version=myversion
+  registries:
+    demoZK:
+      protocol: zookeeper
+      address: node1:2181
+  consumer:
+    references:
+      UserProvider:
+        protocol: dubbo
+        interface: org.apache.dubbo.sample.UserProvider
+  logger:
+    zap-config:
+      level: info
