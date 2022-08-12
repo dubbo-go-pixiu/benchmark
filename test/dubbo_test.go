@@ -135,6 +135,45 @@ var _ = Describe("test", Ordered, func() {
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 			})
 
+			experiment.MeasureDuration("GetGender", func() {
+				defer GinkgoRecover()
+
+				url := fmt.Sprintf(urlPrefix, "GetGender")
+				data := "{\"types\":\"int\",\"values\":{\"1\"}}"
+
+				resp, err := http.Post(url, "application/json", strings.NewReader(data))
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+				gomega.Expect(resp.Status, 200)
+				_, err = ioutil.ReadAll(resp.Body)
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			})
+
+			experiment.MeasureDuration("GetUser0", func() {
+				defer GinkgoRecover()
+
+				url := fmt.Sprintf(urlPrefix, "GetUser0")
+				data := "{\"types\":\"string,string\",\"values\":[\"003\", \"Moorse\"]}"
+
+				resp, err := http.Post(url, "application/json", strings.NewReader(data))
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+				gomega.Expect(resp.Status, 200)
+				_, err = ioutil.ReadAll(resp.Body)
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			})
+
+			experiment.MeasureDuration("GetUsers", func() {
+				defer GinkgoRecover()
+
+				url := fmt.Sprintf(urlPrefix, "GetUsers")
+				data := "{\"types\":\"[]string\",\"values\":[\"002\", \"003\"]}"
+
+				resp, err := http.Post(url, "application/json", strings.NewReader(data))
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+				gomega.Expect(resp.Status, 200)
+				_, err = ioutil.ReadAll(resp.Body)
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			})
+
 		}, sampleConfig)
 	})
 
