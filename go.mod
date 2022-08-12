@@ -12,7 +12,6 @@ require (
 	github.com/onsi/ginkgo/v2 v2.1.4
 	github.com/onsi/gomega v1.20.0
 	github.com/pkg/errors v0.9.1
-	github.com/rs/zerolog v1.27.0
 	google.golang.org/protobuf v1.28.1
 )
 

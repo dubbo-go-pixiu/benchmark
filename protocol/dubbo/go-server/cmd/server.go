@@ -28,8 +28,12 @@ func main() {
 	hessian.RegisterPOJO(&pkg.User{})
 	config.SetProviderService(&pkg.UserProvider{})
 	// ------------
-
-	if err := config.Load(config.WithPath("/mnt/d/Workspace/benchmark/protocol/dubbo/go-server/conf/dubbogo.yml")); err != nil {
+	curPath, err := os.Getwd()
+	curPath = curPath + "/../protocol/dubbo/go-server/conf/dubbogo.yml"
+	if err != nil {
+		panic(err)
+	}
+	if err := config.Load(config.WithPath(curPath)); err != nil {
 		panic(err)
 	}
 
