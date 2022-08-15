@@ -29,7 +29,7 @@ func main() {
 	config.SetProviderService(&pkg.UserProvider{})
 	// ------------
 	curPath, err := os.Getwd()
-	curPath = curPath + "/../protocol/dubbo/go-server/conf/dubbogo.yml"
+	curPath = curPath + "/../../protocol/dubbo/go-server/conf/dubbogo.yml"
 	if err != nil {
 		panic(err)
 	}
