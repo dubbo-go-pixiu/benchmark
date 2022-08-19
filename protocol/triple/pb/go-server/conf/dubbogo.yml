@@ -9,5 +9,7 @@ dubbo:
   provider:
     services:
       GreeterProvider:
+        protocol-ids: triple # 使用上面定义的协议id
+        serialization: protobuf
         # interface is for registry
-        interface: org.apache.dubbo.demo.IGreeter
+        interface: org.apache.dubbogo.samples.api.Greeter

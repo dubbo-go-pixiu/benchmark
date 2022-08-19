@@ -50,7 +50,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	curPath = curPath + "/../../protocol/triple/pb/go-server/conf/dubbogo.yml"
+	curPath = curPath + "/../../../protocol/triple/pb/go-server/conf/dubbogo.yml"
 	if err := config.Load(config.WithPath(curPath)); err != nil {
 		panic(err)
 	}

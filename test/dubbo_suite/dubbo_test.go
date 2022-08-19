@@ -40,7 +40,7 @@ var _ = Describe("test", Ordered, func() {
 		gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
 		dubboServerSession = prepareDubboServer()
-		pixiuSession = test.PreparePixiu(test.CurPath + "/../../protocol/dubbo/pixiu/conf/config.yaml")
+		pixiuSession = test.PreparePixiu("../../dist/pixiu", test.CurPath+"/../../protocol/dubbo/pixiu/conf/config.yaml")
 
 		time.Sleep(3 * time.Second)
 
@@ -109,7 +109,7 @@ var _ = Describe("test", Ordered, func() {
 		}, test.SampleConfig)
 	})
 
-	It("pixiu to dubbo protocol performance test", func() {
+	FIt("pixiu to dubbo protocol performance test", func() {
 
 		urlPrefix := "http://localhost:8881/dubbo.io/org.apache.dubbo.sample.UserProvider/%s"
 
@@ -121,11 +121,18 @@ var _ = Describe("test", Ordered, func() {
 				defer GinkgoRecover()
 
 				url := fmt.Sprintf(urlPrefix, "GetUser")
-				data := "{\"types\":\"object\",\"values\":{\"id\":\"003\"}}"
+				data := `
+{
+    "types": "object",
+    "values": {
+        "id": "003"
+    }
+}
+`
 
 				resp, err := http.Post(url, "application/json", strings.NewReader(data))
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
-				gomega.Expect(resp.Status, 200)
+				gomega.Expect(resp.Status).To(gomega.Equal("200 OK"))
 				_, err = ioutil.ReadAll(resp.Body)
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 			})
@@ -134,11 +141,16 @@ var _ = Describe("test", Ordered, func() {
 				defer GinkgoRecover()
 
 				url := fmt.Sprintf(urlPrefix, "GetGender")
-				data := "{\"types\":\"int\",\"values\":{\"1\"}}"
-
+				data := `
+{
+    "types": "int",
+    "values": 1
+}
+`
 				resp, err := http.Post(url, "application/json", strings.NewReader(data))
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
-				gomega.Expect(resp.Status, 200)
+				gomega.Expect(resp.Status).To(gomega.Equal("200 OK"))
+
 				_, err = ioutil.ReadAll(resp.Body)
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 			})
@@ -147,11 +159,19 @@ var _ = Describe("test", Ordered, func() {
 				defer GinkgoRecover()
 
 				url := fmt.Sprintf(urlPrefix, "GetUser0")
-				data := "{\"types\":\"string,string\",\"values\":[\"003\", \"Moorse\"]}"
-
+				data := `
+{
+    "types": "string,string",
+    "values": [
+        "003",
+        "Moorse"
+    ]
+}
+`
 				resp, err := http.Post(url, "application/json", strings.NewReader(data))
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
-				gomega.Expect(resp.Status, 200)
+				gomega.Expect(resp.Status).To(gomega.Equal("200 OK"))
+
 				_, err = ioutil.ReadAll(resp.Body)
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 			})
@@ -160,12 +180,23 @@ var _ = Describe("test", Ordered, func() {
 				defer GinkgoRecover()
 
 				url := fmt.Sprintf(urlPrefix, "GetUsers")
-				data := "{\"types\":\"[]string\",\"values\":[\"002\", \"003\"]}"
+				data := `
+{
+    "types": "string",
+    "values": [
+        [
+            "003",
+            "002"
+        ]
+    ]
+}
+`
 
 				resp, err := http.Post(url, "application/json", strings.NewReader(data))
+				reply, err := ioutil.ReadAll(resp.Body)
+				fmt.Printf("consumer:%+v", string(reply))
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
-				gomega.Expect(resp.Status, 200)
-				_, err = ioutil.ReadAll(resp.Body)
+				gomega.Expect(resp.Status).To(gomega.Equal("200 OK"))
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 			})
 
@@ -182,9 +213,9 @@ var _ = Describe("test", Ordered, func() {
 func prepareDubboServer() *gexec.Session {
 	serverProcess, err := gexec.Build("dubbo-go-pixiu-benchmark/protocol/dubbo/go-server/cmd")
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
-
 	command := exec.Command(serverProcess)
-	session, err := gexec.Start(command, ioutil.Discard, ioutil.Discard)
+	//session, err := gexec.Start(command, ioutil.Discard, ioutil.Discard)
+	session, err := gexec.Start(command, os.Stdout, os.Stderr)
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
 	return session
