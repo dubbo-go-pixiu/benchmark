@@ -12,7 +12,7 @@ import (
 var (
 	CurPath      string
 	SampleConfig = gmeasure.SamplingConfig{
-		N:           100,
+		N:           500,
 		Duration:    300 * time.Second,
 		NumParallel: 10,
 	}
