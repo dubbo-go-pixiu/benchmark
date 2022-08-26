@@ -7,3 +7,6 @@ dubbo:
       GreeterClientImpl:
         protocol: tri
         interface: org.apache.dubbogo.samples.api.Greeter
+  logger:
+    zap-config:
+      level: panic

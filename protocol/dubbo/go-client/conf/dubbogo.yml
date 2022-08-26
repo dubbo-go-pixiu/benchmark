@@ -12,4 +12,4 @@ dubbo:
         interface: org.apache.dubbo.sample.UserProvider
   logger:
     zap-config:
-      level: info
+      level: panic

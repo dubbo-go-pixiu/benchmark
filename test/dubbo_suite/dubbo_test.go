@@ -59,42 +59,42 @@ var _ = Describe("test", Ordered, func() {
 			reqUser := &pkg.User{}
 			reqUser.ID = "003"
 			experiment.MeasureDuration("GetUser", func() {
-				user, err := userProvider.GetUser(context.TODO(), reqUser)
+				_, err := userProvider.GetUser(context.TODO(), reqUser)
 				gomega.Expect(err).To(gomega.Succeed())
-				fmt.Printf("consumer:%+v", user)
+				//fmt.Printf("consumer:%+v", user)
 			})
 		}, test.SampleConfig)
 
 		experiment.Sample(func(idx int) {
 			experiment.MeasureDuration("GetGender", func() {
-				gender, err := userProvider.GetGender(context.TODO(), 1)
+				_, err := userProvider.GetGender(context.TODO(), 1)
 				gomega.Expect(err).To(gomega.Succeed())
-				fmt.Printf("consumer:%+v", gender)
+				//fmt.Printf("consumer:%+v", gender)
 			})
 		}, test.SampleConfig)
 
 		experiment.Sample(func(idx int) {
 			experiment.MeasureDuration("GetUser0", func() {
-				ret, err := userProvider.GetUser0("003", "Moorse")
+				_, err := userProvider.GetUser0("003", "Moorse")
 				gomega.Expect(err).To(gomega.Succeed())
-				fmt.Printf("consumer:%+v", ret)
+				//fmt.Printf("consumer:%+v", ret)
 			})
 		}, test.SampleConfig)
 
 		experiment.Sample(func(idx int) {
 			experiment.MeasureDuration("GetUsers", func() {
-				ret1, err := userProvider.GetUsers([]string{"002", "003"})
+				_, err := userProvider.GetUsers([]string{"002", "003"})
 				gomega.Expect(err).To(gomega.Succeed())
-				fmt.Printf("consumer:%+v", ret1)
+				//fmt.Printf("consumer:%+v", ret1)
 			})
 		}, test.SampleConfig)
 
 		experiment.Sample(func(idx int) {
 			experiment.MeasureDuration("GetUser2", func() {
 				var i int32 = 1
-				user, err := userProvider.GetUser2(context.TODO(), i)
+				_, err := userProvider.GetUser2(context.TODO(), i)
 				gomega.Expect(err).To(gomega.Succeed())
-				fmt.Printf("consumer:%+v", user)
+				//fmt.Printf("consumer:%+v", user)
 			})
 		}, test.SampleConfig)
 
@@ -104,12 +104,12 @@ var _ = Describe("test", Ordered, func() {
 				reqUser.ID = "003"
 				_, err := userProvider.GetErr(context.TODO(), reqUser)
 				gomega.Expect(err).To(gomega.HaveOccurred())
-				fmt.Printf("consumer:%+v", err.Error())
+				//fmt.Printf("consumer:%+v", err.Error())
 			})
 		}, test.SampleConfig)
 	})
 
-	FIt("pixiu to dubbo protocol performance test", func() {
+	It("pixiu to dubbo protocol performance test", func() {
 
 		urlPrefix := "http://localhost:8881/dubbo.io/org.apache.dubbo.sample.UserProvider/%s"
 
@@ -193,8 +193,7 @@ var _ = Describe("test", Ordered, func() {
 `
 
 				resp, err := http.Post(url, "application/json", strings.NewReader(data))
-				reply, err := ioutil.ReadAll(resp.Body)
-				fmt.Printf("consumer:%+v", string(reply))
+				_, err = ioutil.ReadAll(resp.Body)
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 				gomega.Expect(resp.Status).To(gomega.Equal("200 OK"))
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
@@ -204,6 +203,7 @@ var _ = Describe("test", Ordered, func() {
 	})
 
 	AfterAll(func() {
+		time.Sleep(5 * time.Second)
 		dubboServerSession.Terminate().Wait()
 		pixiuSession.Terminate().Wait(5 * time.Second)
 	})

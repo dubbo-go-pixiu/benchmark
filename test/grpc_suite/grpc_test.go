@@ -50,7 +50,7 @@ var _ = Describe("grpc protocol performance test", Ordered, func() {
 	})
 
 	It("grpc protocol performance test", func() {
-		experiment := gmeasure.NewExperiment("triple protocol performance test")
+		experiment := gmeasure.NewExperiment("grpc protocol performance test")
 		AddReportEntry(experiment.Name, experiment)
 
 		experiment.Sample(func(idx int) {
@@ -97,10 +97,29 @@ var _ = Describe("grpc protocol performance test", Ordered, func() {
 	})
 
 	It("pixiu to grpc protocol performance test", func() {
-		experiment := gmeasure.NewExperiment("pixiu to triple protocol performance test")
+		experiment := gmeasure.NewExperiment("pixiu to grpc protocol performance test")
 		AddReportEntry(experiment.Name, experiment)
 
 		urlPrefix := "http://localhost:8881/api/v1/provider.UserProvider/"
+
+		experiment.Sample(func(idx int) {
+			defer GinkgoRecover()
+
+			experiment.MeasureDuration("GetUser", func() {
+				url := urlPrefix + "GetUser"
+				data := `
+{
+	"userId": 1
+}
+`
+				resp, err := http.Post(url, "application/json", strings.NewReader(data))
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+				_, err = ioutil.ReadAll(resp.Body)
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+				gomega.Expect(resp.Status, 200)
+				//println(string(respBytes))
+			})
+		}, test.SampleConfig)
 
 		experiment.Sample(func(idx int) {
 			defer GinkgoRecover()
@@ -109,15 +128,34 @@ var _ = Describe("grpc protocol performance test", Ordered, func() {
 				url := urlPrefix + "GetUsers"
 				data := `
 {
-	"userId": 1
+	"userId": [1, 2, 3]
 }
 `
 				resp, err := http.Post(url, "application/json", strings.NewReader(data))
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
-				respBytes, err := ioutil.ReadAll(resp.Body)
+				_, err = ioutil.ReadAll(resp.Body)
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 				gomega.Expect(resp.Status, 200)
-				println(string(respBytes))
+				//println(string(respBytes))
+			})
+		}, test.SampleConfig)
+
+		experiment.Sample(func(idx int) {
+			defer GinkgoRecover()
+
+			experiment.MeasureDuration("GetUserByName", func() {
+				url := urlPrefix + "GetUserByName"
+				data := `
+{
+	"name": "Kenway"
+}
+`
+				resp, err := http.Post(url, "application/json", strings.NewReader(data))
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+				_, err = ioutil.ReadAll(resp.Body)
+				gomega.Expect(err).NotTo(gomega.HaveOccurred())
+				gomega.Expect(resp.Status, 200)
+				//println(string(respBytes))
 			})
 		}, test.SampleConfig)
 	})

@@ -65,9 +65,9 @@ var _ = Describe("triple protocol performance test", Ordered, func() {
 					Name: "laurence",
 				}
 				ctx := context.WithValue(context.Background(), tripleConstant.TripleCtxKey("tri-req-id"), "test_value_XXXXXXXX")
-				reply, err := grpcGreeterImpl.SayHello(ctx, req)
+				_, err := grpcGreeterImpl.SayHello(ctx, req)
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
-				fmt.Printf("consumer:%+v\n", reply)
+				//fmt.Printf("consumer:%+v\n", reply)
 			})
 		}, test.SampleConfig)
 	})
@@ -96,7 +96,7 @@ var _ = Describe("triple protocol performance test", Ordered, func() {
 				reply, err := ioutil.ReadAll(resp.Body)
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 				gomega.Expect(string(reply)).NotTo(gomega.MatchRegexp("client call err*"))
-				fmt.Printf("consumer:%+v\n", string(reply))
+				//fmt.Printf("consumer:%+v\n", string(reply))
 			})
 		}, test.SampleConfig)
 	})

@@ -38,6 +38,7 @@ func main() {
 	}
 
 	initSignal()
+
 }
 
 func initSignal() {
