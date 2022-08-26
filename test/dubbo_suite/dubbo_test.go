@@ -214,8 +214,8 @@ func prepareDubboServer() *gexec.Session {
 	serverProcess, err := gexec.Build("dubbo-go-pixiu-benchmark/protocol/dubbo/go-server/cmd")
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
 	command := exec.Command(serverProcess)
-	//session, err := gexec.Start(command, ioutil.Discard, ioutil.Discard)
-	session, err := gexec.Start(command, os.Stdout, os.Stderr)
+	session, err := gexec.Start(command, ioutil.Discard, ioutil.Discard)
+	//session, err := gexec.Start(command, os.Stdout, os.Stderr)
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
 	return session

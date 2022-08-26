@@ -112,8 +112,8 @@ func prepareTripleServer() *gexec.Session {
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
 	command := exec.Command(serverProcess)
-	//session, err := gexec.Start(command, ioutil.Discard, ioutil.Discard)
-	session, err := gexec.Start(command, os.Stdout, os.Stderr)
+	session, err := gexec.Start(command, ioutil.Discard, ioutil.Discard)
+	//session, err := gexec.Start(command, os.Stdout, os.Stderr)
 
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
